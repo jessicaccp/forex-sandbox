@@ -1,0 +1,38 @@
+[project]
+name = "forex-sandbox"
+version = "1.0.0"
+description = "A currency quote API built with FastAPI to showcase the performance of asynchronous operations"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[all]>=0.117.1",
+    "taskipy>=1.14.1",
+    "uvicorn[standard]>=0.36.0",
+]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+preview = true
+select = ["I", "F", "E", "W", "PL", "PT"]
+
+[tool.ruff.format]
+preview = true
+quote-style = "double"
+
+[tool.taskipy.settings]
+cwd = "src"
+use_vars = true
+
+[tool.taskipy.tasks]
+pre_run = "task lint"
+run = "uvicorn main:app --reload"
+pre_deploy = "task pre_run"
+deploy = "uvicorn {app} --host {host} --port {port}"
+pre_test = "task lint"
+test = "coverage run -m pytest"
+post_test = "coverage html"
+lint = "ruff check . && ruff check . --diff"
+format = "ruff check . --fix && ruff format ."
+
