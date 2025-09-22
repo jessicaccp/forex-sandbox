@@ -9,7 +9,7 @@ dependencies = [
     "uvicorn[standard]>=0.36.0",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "coverage>=7.10.7",
     "httpx>=0.28.1",
@@ -43,4 +43,4 @@ test = "coverage run -m pytest"
 post_test = "coverage html"
 lint = "ruff check . && ruff check . --diff"
 format = "ruff check . --fix && ruff format ."
-setup = "uv pip install -e ."
+setup = "uv pip install -e '.[dev]'"
