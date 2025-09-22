@@ -20,7 +20,7 @@ async def get_quote(
         str,
         Query(
             description="Source currency code (e.g., USD, BRL)",
-            example="USD",
+            examples=["USD"],
             min_length=3,
             max_length=3,
         ),
@@ -29,7 +29,7 @@ async def get_quote(
         str,
         Query(
             description="Destination currency code (e.g., EUR, JPY)",
-            example="BRL",
+            examples=["BRL"],
             min_length=3,
             max_length=3,
         ),
