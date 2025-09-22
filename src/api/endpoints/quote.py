@@ -1,15 +1,40 @@
-from fastapi import APIRouter
+from typing import Annotated
 
-from api.schemas.quote import QuoteResponse
-from core import services
+from fastapi import APIRouter, Query
+
+from src.api.schemas.quote import QuoteResponse
+from src.core import services
 
 router = APIRouter()
 
 
-@router.get("/quote", response_model=QuoteResponse)
-async def get_quote(from_currency: str, to_currency: str):
-    """Gets a simulated currency exchange quote."""
-
+@router.get(
+    "/quote",
+    response_model=QuoteResponse,
+    summary="Gets a simulated currency exchange quote",
+    description="Returns a simulated quote between two currencies after an \
+        asynchronous delay to demonstrate performance.",
+)
+async def get_quote(
+    from_currency: Annotated[
+        str,
+        Query(
+            description="Source currency code (e.g., USD, BRL)",
+            example="USD",
+            min_length=3,
+            max_length=3,
+        ),
+    ],
+    to_currency: Annotated[
+        str,
+        Query(
+            description="Destination currency code (e.g., EUR, JPY)",
+            example="BRL",
+            min_length=3,
+            max_length=3,
+        ),
+    ],
+):
     return await services.create_simulated_quote(
         from_currency=from_currency, to_currency=to_currency
     )

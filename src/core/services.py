@@ -2,8 +2,8 @@ import asyncio
 import random
 from datetime import datetime
 
-from api.schemas.quote import QuoteResponse
-from core.exceptions import SameCurrencyError
+from src.api.schemas.quote import QuoteResponse
+from src.core.exceptions import SameCurrencyError
 
 
 async def create_simulated_quote(
