@@ -3,6 +3,8 @@ from httpx import ASGITransport, AsyncClient, codes
 
 from src.main import app
 
+TEST_AMOUNT = 150.0
+
 
 @pytest.mark.asyncio
 async def test_get_quote_success():
@@ -13,13 +15,14 @@ async def test_get_quote_success():
         transport=transport, base_url="http://test"
     ) as client:
         response = await client.get(
-            "/v1/quote?from_currency=USD&to_currency=BRL"
+            "/v1/quote?from_currency=USD&to_currency=BRL&amount=150"
         )
 
     assert response.status_code == codes.OK
     data = response.json()
     assert data["from_currency"] == "USD"
-    assert "rate" in data
+    assert data["to_currency"] == "BRL"
+    assert data["amount"] == TEST_AMOUNT
 
 
 @pytest.mark.asyncio
@@ -31,8 +34,13 @@ async def test_get_quote_same_currency_error():
         transport=transport, base_url="http://test"
     ) as client:
         response = await client.get(
-            "/v1/quote?from_currency=USD&to_currency=USD"
+            "/v1/quote?from_currency=USD&to_currency=USD&amount=150"
         )
 
     assert response.status_code == codes.BAD_REQUEST
-    assert "cannot be the same" in response.json()["detail"]
+    data = response.json()
+    assert "detail" in data
+    assert (
+        "'from_currency' and 'to_currency' cannot be the same"
+        in data["detail"]
+    )

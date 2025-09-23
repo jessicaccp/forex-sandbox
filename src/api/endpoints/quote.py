@@ -12,8 +12,8 @@ router = APIRouter()
     "/quote",
     response_model=QuoteResponse,
     summary="Gets a simulated currency exchange quote",
-    description="Returns a simulated quote between two currencies after an \
-        asynchronous delay to demonstrate performance.",
+    description="Returns a simulated quote for converting an amount between \
+        two currencies.",
 )
 async def get_quote(
     from_currency: Annotated[
@@ -34,7 +34,17 @@ async def get_quote(
             max_length=3,
         ),
     ],
+    amount: Annotated[
+        float,
+        Query(
+            description="The amount to be converted.",
+            examples=[100.50],
+            gt=0,
+        ),
+    ],
 ):
     return await services.create_simulated_quote(
-        from_currency=from_currency, to_currency=to_currency
+        from_currency=from_currency,
+        to_currency=to_currency,
+        amount=amount,
     )
